@@ -1,0 +1,214 @@
+//ready state functions and methods
+(function ($) {
+  $(document).ready(function () {
+
+    var bootstrapButton = $.fn.button.noConflict();
+    $.fn.bootstrapBtn = bootstrapButton;
+
+    // sliding-link
+    $(".sliding-link").click(function (e) {
+      e.preventDefault();
+      var aid = $(this).attr("href");
+      $('html,body').animate({scrollTop: $(aid).offset().top}, 'slow');
+    });
+
+    $(".sliding-link-offset").click(function (e) {
+      e.preventDefault();
+      var aid = $(this).attr("href");
+      $('html,body').animate({scrollTop: $(aid).offset().top - 200}, 'slow');
+    });
+
+
+    $(".sliding-link-offset-short").click(function (e) {
+      e.preventDefault();
+      var aid = $(this).attr("href");
+      $('html,body').animate({scrollTop: $(aid).offset().top - 250}, 'slow');
+    });
+
+    //   // Column Equilizer
+    //   // Select and loop the container element of the elements you want to equalise
+    //  $('.paragraph--type--tab-content-container.row').each(function(){
+    //    // Cache the highest
+    //    var highestBox = 0;
+    //    // Select and loop the elements you want to equalise
+    //    $('.tabbed-card-basic', this).each(function(){
+    //      // If this box is higher than the cached highest then store it
+    //      if($(this).height() > highestBox) {
+    //        highestBox = $(this).height();
+    //      }
+    //    });
+    //    // Set the height of all those children to whichever was highest
+    //    $('.tabbed-card-basic',this).height(highestBox);
+    //  });
+
+
+    // Cards
+    // hide detailed onload;
+    $('.field--name-field-cards-list-card-detailed').hide();
+
+    // toggle on card
+    $('.stratus-card').hover(function () {
+      // mobile only
+      if (window.matchMedia("(max-width: 991px)").matches) {
+        $(this).children('.field--name-field-cards-list-card-text').hide();
+        $(this).children('.field--name-field-cards-list-card-detailed').show();
+      } else {
+        $(this).children('.field--name-field-cards-list-card-text').show();
+        $(this).children('.field--name-field-cards-list-card-detailed').show();
+      }
+    }, function () {
+      $(this).children('.field--name-field-cards-list-card-detailed').hide();
+      $(this).children('.field--name-field-cards-list-card-text').show();
+    });
+
+    // Stratus Call-out Box pull down top bg
+
+    $('.section-call-out-box').parentsUntil('.field--name-field-page-paragraphs').children('.light-bg').first().addClass('pulled-down');
+    if ($('div.light-bg').hasClass('pulled-down')) {
+
+      // rearrange grid for Call Out Box INSIDE Cards List Paragraph
+
+      // Make sure its case-study
+      var sectionCob = $('.section-call-out-box').not('.stratus-case-study');
+      sectionCob.find('.stratus-call-out-box').addClass('raised');
+      sectionCob.find('.cob-img').removeClass('col-md-6').addClass('col-md-3 col-md-offset-1');
+      sectionCob.find('.cob-content').removeClass('col-md-6').addClass('col-md-7');
+
+      // stretch bg
+      var cob = $('.field--name-field-page-paragraphs');
+      cob.find('.dark-bg.section-tabs').addClass('stretched-top-200');
+    }
+
+    // DNA modify
+    if ($('.section-dna').hasClass('white-bg')) {
+      $(this).find('.dna-wrapper').removeClass('col-md-9');
+    }
+
+    // case studies (tabbed content with light-bg)
+    $('.section-case-studies').find('.tabbed-card-basic').addClass('hide');
+    $('.section-case-studies').find('.tabbed-card-basic-alt').removeClass('hide');
+
+    $('.tabbed-card-basic-alt-content').hover(function () {
+      $(this).children('.tabbed-card-basic-desc').removeClass('hide');
+    }, function () {
+      $(this).children('.tabbed-card-basic-desc').addClass('hide');
+    });
+
+    $('li.filter.active').addClass('filter-select');
+
+    // set initial selected filter to be All
+    $('.case-studies-title-select').text('All');
+
+    // filter case studies by class
+    $('li.filter a').click(function (e) {
+      e.preventDefault();
+      var keywordFilter = $(this).attr('data-keyword');
+      var caseStudy = $('.tabbed-card-basic-alt');
+      var keyword = $(this).text();
+
+      $(this).parent().siblings().removeClass('filter-select');
+      $(this).parent().addClass('filter-select');
+
+      // upate main case studies title on click
+      $('.case-studies-title-select').text(keyword);
+
+      // hide all case studies
+      caseStudy.addClass('hide');
+      // Only show case studies with selected keywords
+      $('.tabbed-card-basic-alt.' + keywordFilter).removeClass('hide');
+
+      // show all
+      if (keywordFilter == 'all') {
+        $('.tabbed-card-basic-alt').removeClass('hide');
+      }
+      // add slidinglink to anchor
+      $('html,body').animate({scrollTop: $('#tab-content-0').offset().top}, 'slow');
+    });
+
+    // adding class is-active for /case-studies on case study page
+    if ($('.section-call-out-box').hasClass('stratus-case-study')) {
+      $('[data-drupal-link-system-path]').each(function () {
+        var currentLink = $(this).attr('data-drupal-link-system-path');
+        if (currentLink == 'node/6') {
+          $(this).addClass('is-active');
+        }
+      });
+    }
+
+
+    // blog posts
+    $('.blog-post').hover(function () {
+      $(this).find('.blog-post-description').removeClass('hide');
+      $(this).find('.blog-post-chevron').addClass('hide');
+      $(this).find('.blog-post-link').removeClass('hide');
+    }, function () {
+      $(this).find('.blog-post-description').addClass('hide');
+      $(this).find('.blog-post-chevron').removeClass('hide');
+      $(this).find('.blog-post-link').addClass('hide');
+    });
+
+    $('.resource').hover(function () {
+      $(this).find('.resource-description').removeClass('hide');
+      $(this).find('.resource-chevron').addClass('hide');
+      $(this).find('.resource-link').removeClass('hide');
+    }, function () {
+      $(this).find('.resource-description').addClass('hide');
+      $(this).find('.resource-chevron').removeClass('hide');
+      $(this).find('.resource-link').addClass('hide');
+    });
+
+    // Add img-responsive for uploaded image on blog post.
+    $('.blog-post img').addClass('img-responsive');
+
+    var touchSensitivity = 5;
+    $(".carousel").on("touchstart", function (event) {
+      var xClick = event.originalEvent.touches[0].pageX;
+      $(this).one("touchmove", function (event) {
+        var xMove = event.originalEvent.touches[0].pageX;
+        if (Math.floor(xClick - xMove) > touchSensitivity) {
+          $(this).carousel('next');
+        } else if (Math.floor(xClick - xMove) < -(touchSensitivity)) {
+          $(this).carousel('prev');
+        }
+      });
+      $(".carousel").on("touchend", function () {
+        $(this).off("touchmove");
+      });
+    });
+
+
+    // set bg using img url
+    $('[data-bg-img]').each(function () {
+      var bgImg = $(this).attr('data-bg-img');
+      if (bgImg) {
+        $(this).css({
+          'background-image': 'url(' + bgImg + ')',
+          'background-repeat': 'no-repeat',
+          'background-size': 'cover'
+        });
+      }
+    });
+
+
+    // center title text for dna with white bg
+    if ($('.section-dna').hasClass('white-bg')) {
+      $(this).find('.dna-wrapper').removeClass('col-md-8');
+    }
+
+
+    // Call out box 2 hijacks dark gray bg from DNA
+    $('.section-call-out-box-2').parent().next('.field--item').children('.section-dna.dark-bg').addClass('stretched-top');
+
+    // Employee Cards
+    // toggle on card
+    $('.employee-card-back').hide();
+    $('.employee-card-wrap').hover(function () {
+      $(this).children('.employee-card-back').show();
+      $(this).children('.employee-card-front').hide();
+    }, function () {
+      $(this).children('.employee-card-back').hide();
+      $(this).children('.employee-card-front').show();
+    });
+
+  });
+})(jQuery);
